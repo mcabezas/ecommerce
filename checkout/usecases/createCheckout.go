@@ -7,7 +7,7 @@ import (
 )
 
 type CreateCheckout interface {
-	create(watchIDs []models.WatchID) (money.Money, error)
+	Create(watchIDs []models.WatchID) (money.Money, error)
 }
 
 func NewCreateCheckout(repository infrastructure.WatchCatalogRepository, discountFinder DiscountFinder) CreateCheckout {
@@ -22,7 +22,7 @@ type createCheckout struct {
 	discountFinder DiscountFinder
 }
 
-func (c *createCheckout) create(watchIDs []models.WatchID) (money.Money, error) {
+func (c *createCheckout) Create(watchIDs []models.WatchID) (money.Money, error) {
 	watchIDsSet := removeDuplicatedIDs(watchIDs)
 	watchesCatalog, err := c.repository.GetWatchesCatalogue(watchIDsSet)
 	if err != nil {

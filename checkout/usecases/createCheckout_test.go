@@ -10,7 +10,7 @@ import (
 
 func TestCanCreateSimpleCheckout(t *testing.T) {
 	checkout := buildCreateCheckout(EmptyWatchCatalogue(), buildDiscountFinder([]models.ComboDiscount{}))
-	_, err := checkout.create([]models.WatchID{
+	_, err := checkout.Create([]models.WatchID{
 		"001",
 		"002",
 		"001",
@@ -22,7 +22,7 @@ func TestCanCreateSimpleCheckout(t *testing.T) {
 
 func TestCanCreateCheckoutGivenEmptyWatchList(t *testing.T) {
 	checkout := buildCreateCheckout(EmptyWatchCatalogue(), buildDiscountFinder([]models.ComboDiscount{}))
-	_, err := checkout.create([]models.WatchID{})
+	_, err := checkout.Create([]models.WatchID{})
 	assert.Nil(t, err)
 }
 
@@ -35,7 +35,7 @@ func TestCanCreateCheckoutWithoutDiscounts(t *testing.T) {
 			{ID: "004", Name: "Casio", UnitPrice: 30},
 		}, buildDiscountFinder([]models.ComboDiscount{}),
 	)
-	price, err := checkout.create([]models.WatchID{
+	price, err := checkout.Create([]models.WatchID{
 		"001",
 		"002",
 		"001",
@@ -58,7 +58,7 @@ func TestCanCreateCheckoutWithDiscounts(t *testing.T) {
 			models.NewComboDiscount("002", 2, 120),
 		}),
 	)
-	price, err := checkout.create([]models.WatchID{
+	price, err := checkout.Create([]models.WatchID{
 		"001",
 		"002",
 		"002",
