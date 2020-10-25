@@ -10,14 +10,16 @@ type CreateCheckout interface {
 	create(watchIDs []models.WatchID) (money.Money, error)
 }
 
-func NewCreateCheckout(repository infrastructure.WatchCatalogRepository) CreateCheckout {
+func NewCreateCheckout(repository infrastructure.WatchCatalogRepository, discountFinder DiscountFinder) CreateCheckout {
 	return &createCheckout{
-		repository: repository,
+		repository:     repository,
+		discountFinder: discountFinder,
 	}
 }
 
 type createCheckout struct {
-	repository infrastructure.WatchCatalogRepository
+	repository     infrastructure.WatchCatalogRepository
+	discountFinder DiscountFinder
 }
 
 func (c *createCheckout) create(watchIDs []models.WatchID) (money.Money, error) {
@@ -28,14 +30,38 @@ func (c *createCheckout) create(watchIDs []models.WatchID) (money.Money, error) 
 	}
 
 	purchaseOrder := watchIDsToPurchaseOrder(watchIDs, watchesCatalog)
-	price := c.calculateBasePrice(purchaseOrder)
-	return money.Money{Amount: price}, nil
+	price := calculateBasePrice(purchaseOrder)
+
+	discounts, err := c.discountFinder.findComboDiscounts(watchIDsSet)
+	if err != nil {
+		return money.Money{}, err
+	}
+	discountedAmount, err := calculateDiscountedPrice(purchaseOrder, discounts)
+	if err != nil {
+		return money.Money{}, err
+	}
+	return price.Sub(discountedAmount)
 }
 
-func (c *createCheckout) calculateBasePrice(purchaseOrder models.PurchaseOrder) float64 {
+func calculateBasePrice(purchaseOrder models.PurchaseOrder) money.Money {
 	var price float64
 	for _, watch := range purchaseOrder.Items {
 		price += watch.UnitPrice * float64(watch.Qty)
 	}
-	return price
+	return money.Money{Amount: price}
+}
+
+func calculateDiscountedPrice(purchaseOrder models.PurchaseOrder, discounts []models.Discount) (money.Money, error) {
+	var discountedPrice money.Money
+	for _, discount := range discounts {
+		calculatedDiscount, err := discount.CalculateDiscount(purchaseOrder)
+		if err != nil {
+			return money.Money{}, err
+		}
+		discountedPrice, err = discountedPrice.Plus(calculatedDiscount)
+		if err != nil {
+			return money.Money{}, err
+		}
+	}
+	return discountedPrice, nil
 }
