@@ -67,6 +67,8 @@ The application has two repositories
 
 #### WatchCatalogueRepository
 
+(Path cmd/web/rest/main.go:29)
+
 WatchCatalogue comes preloaded with the following data
 _________________________________________
 | WATCH ID  | Name         | Unit Price |
@@ -78,6 +80,8 @@ _________________________________________
 -----------------------------------------
 
 #### ComboDiscountRepository
+
+( Path cmd/web/rest/main.go:21 )
 
 ComboDiscountRepository comes preloaded with the following data
 ___________________________________

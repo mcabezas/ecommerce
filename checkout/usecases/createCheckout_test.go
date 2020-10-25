@@ -9,13 +9,9 @@ import (
 )
 
 func TestCanCreateSimpleCheckout(t *testing.T) {
-	checkout := buildCreateCheckout(EmptyWatchCatalogue(), buildDiscountFinder([]models.ComboDiscount{}))
+	checkout := buildCreateCheckout([]models.WatchCatalogueItem{{"001","random", 10}}, buildDiscountFinder([]models.ComboDiscount{}))
 	_, err := checkout.Create([]models.WatchID{
 		"001",
-		"002",
-		"001",
-		"004",
-		"003",
 	})
 	assert.Nil(t, err)
 }
