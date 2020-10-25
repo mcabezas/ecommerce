@@ -28,7 +28,7 @@ func (h *Handler) CreateCheckoutHandler(w http.ResponseWriter, r *http.Request) 
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	create, err := h.CreateCheckout.Create(watchIDs)
+	price, err := h.CreateCheckout.Create(watchIDs)
 	if err != nil {
 		logs.Log().Info("there was an issue creating checkout", zap.String("requestID", middleware.GetReqID(r.Context())))
 		w.WriteHeader(http.StatusBadRequest)
@@ -36,7 +36,7 @@ func (h *Handler) CreateCheckoutHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	marshal, _:= json.Marshal(create)
+	marshal, _ := json.Marshal(CheckoutResponse{Price: price.Amount})
 	_, _ = w.Write(marshal)
 }
 
@@ -47,4 +47,8 @@ func parseUpdateBody(r *http.Request) ([]models.WatchID, error) {
 		return nil, err
 	}
 	return watchIDs, nil
+}
+
+type CheckoutResponse struct {
+	Price float64 `json:"price"`
 }

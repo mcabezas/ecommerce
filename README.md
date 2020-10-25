@@ -5,7 +5,7 @@
 2. [Native build](#native-build)
 3. [Architecture](#architecture)
 4. [Discounts](#discounts)
-5. [PreLoadedData]
+5. [PreLoadedData](#preloaded-data)
 
 ## Docker Image
 
@@ -17,7 +17,7 @@
     docker build --tag mcabezas-api:0.1.0 .
 
 ### Run Image
-    docker run --publish 8000:8080 --detach --name mc-api mcabezas-api:0.1.0
+    docker run --publish 9092:9092 --detach mcabezas-api:0.1.0
 
 ## Native build
 
@@ -34,7 +34,7 @@
 
 ## Architecture
 
-This project has been built using `clean architecture.
+This project has been built using `clean architecture`.
 
 The database implementation is a mocked one. However, it can be easily replaced by another one once the database technology has been choose.
  
