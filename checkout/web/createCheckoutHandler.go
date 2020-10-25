@@ -25,10 +25,15 @@ func (h *Handler) CreateCheckoutHandler(w http.ResponseWriter, r *http.Request) 
 	watchIDs, err := parseUpdateBody(r)
 	if err != nil {
 		logs.Sugar().Info("there was an issue reading body", zap.String("requestID", middleware.GetReqID(r.Context())))
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 	create, err := h.CreateCheckout.Create(watchIDs)
 	if err != nil {
-		logs.Sugar().Info("there was an issue creating checkout", zap.String("requestID", middleware.GetReqID(r.Context())))
+		logs.Log().Info("there was an issue creating checkout", zap.String("requestID", middleware.GetReqID(r.Context())))
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte(err.Error()))
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	marshal, _:= json.Marshal(create)

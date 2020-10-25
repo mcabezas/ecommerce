@@ -1,6 +1,7 @@
 package infrastructure
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/mcabezas/ecommerce/checkout/models"
@@ -25,7 +26,9 @@ func (m *inMemoryWatchCatalogue) GetWatchesCatalogue(watchIDs []models.WatchID) 
 	for _, watchID := range watchIDs {
 		if watch, ok := m.watchCatalog.Load(watchID); ok {
 			result[watchID] = watch.(models.WatchCatalogueItem)
+			continue
 		}
+		return result, fmt.Errorf("invalid_watch_id")
 	}
 	return result, nil
 }
