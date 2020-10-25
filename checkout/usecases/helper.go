@@ -18,3 +18,19 @@ func removeDuplicatedIDs(src []models.WatchID) []models.WatchID {
 	return result
 }
 
+func watchIDsToPurchaseOrder(watchIDs []models.WatchID, catalogue map[models.WatchID]models.WatchCatalogueItem) models.PurchaseOrder {
+	watchListItems := make(map[models.WatchID]models.PurchaseOrderItem, len(watchIDs))
+	for _, watchID := range watchIDs {
+		if item, ok := watchListItems[watchID]; ok {
+			item.Qty += 1
+			watchListItems[watchID] = item
+			continue
+		}
+		watchListItems[watchID] = models.PurchaseOrderItem{
+			WatchID:   watchID,
+			Qty:       1,
+			UnitPrice: catalogue[watchID].UnitPrice,
+		}
+	}
+	return models.PurchaseOrder{Items: watchListItems}
+}

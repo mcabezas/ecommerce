@@ -26,9 +26,16 @@ func (c *createCheckout) create(watchIDs []models.WatchID) (money.Money, error) 
 	if err != nil {
 		return money.Money{}, err
 	}
-	var price float64
-	for _, watch := range watchesCatalog {
-		price += watch.UnitPrice
-	}
+
+	purchaseOrder := watchIDsToPurchaseOrder(watchIDs, watchesCatalog)
+	price := c.calculateBasePrice(purchaseOrder)
 	return money.Money{Amount: price}, nil
+}
+
+func (c *createCheckout) calculateBasePrice(purchaseOrder models.PurchaseOrder) float64 {
+	var price float64
+	for _, watch := range purchaseOrder.Items {
+		price += watch.UnitPrice * float64(watch.Qty)
+	}
+	return price
 }

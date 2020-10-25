@@ -36,13 +36,14 @@ func TestCanCreateCheckoutWithoutDiscounts(t *testing.T) {
 		},
 	)
 	price, err := checkout.create([]models.WatchID{
+		"001",
 		"002",
 		"001",
 		"004",
 		"003",
 	})
 	assert.Nil(t, err)
-	assert.Equal(t, float64(260), price.Amount)
+	assert.Equal(t, float64(360), price.Amount)
 }
 
 func buildCreateCheckout(watchCatalog []models.WatchCatalogueItem) CreateCheckout {
