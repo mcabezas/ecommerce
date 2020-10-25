@@ -7,27 +7,27 @@ type Discount interface {
 	CalculateDiscount(purchaseOrder PurchaseOrder) (money.Money, error)
 }
 
-type FixedDiscount struct {
+type ComboDiscount struct {
 	watchID    WatchID
 	units      int
 	fixedPrice float64
 }
 
-func (ud *FixedDiscount) WatchID() WatchID {
+func (ud *ComboDiscount) WatchID() WatchID {
 	return ud.watchID
 }
 
-func NewFixedDiscount(watchID WatchID, units int, fixedPrice float64) FixedDiscount {
-	return FixedDiscount{
+func NewComboDiscount(watchID WatchID, units int, fixedPrice float64) ComboDiscount {
+	return ComboDiscount{
 		watchID:    watchID,
 		units:      units,
 		fixedPrice: fixedPrice,
 	}
 }
-func (ud *FixedDiscount) CalculateDiscount(purchaseOrder PurchaseOrder) (money.Money, error) {
+func (ud *ComboDiscount) CalculateDiscount(purchaseOrder PurchaseOrder) (money.Money, error) {
 	return money.Money{Amount: 0}, nil
 }
 
-func (ud *FixedDiscount) Name() string {
-	return "Fixed discount"
+func (ud *ComboDiscount) Name() string {
+	return "Combo discount"
 }

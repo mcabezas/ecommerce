@@ -9,22 +9,22 @@ import (
 )
 
 func TestGivenAEmptyListCanFindAUnitDiscount(t *testing.T) {
-	finder := buildDiscountFinder([]models.FixedDiscount{
-		models.NewFixedDiscount("001", 3, 200),
-		models.NewFixedDiscount("002", 3, 120),
+	finder := buildDiscountFinder([]models.ComboDiscount{
+		models.NewComboDiscount("001", 3, 200),
+		models.NewComboDiscount("002", 3, 120),
 	})
-	discounts, err := finder.findFixedDiscounts([]models.WatchID{})
+	discounts, err := finder.findComboDiscounts([]models.WatchID{})
 	assert.Nil(t, err)
 	assert.True(t, len(discounts) == 0)
 }
 
 func TestCanFindSingleUnitDiscount(t *testing.T) {
-	finder := buildDiscountFinder([]models.FixedDiscount{
-		models.NewFixedDiscount("001", 3, 200),
-		models.NewFixedDiscount("002", 3, 120),
-		models.NewFixedDiscount("003", 0, 120),
+	finder := buildDiscountFinder([]models.ComboDiscount{
+		models.NewComboDiscount("001", 3, 200),
+		models.NewComboDiscount("002", 3, 120),
+		models.NewComboDiscount("003", 0, 120),
 	})
-	discounts, err := finder.findFixedDiscounts(
+	discounts, err := finder.findComboDiscounts(
 		[]models.WatchID{"002"},
 	)
 	assert.Nil(t, err)
@@ -32,20 +32,20 @@ func TestCanFindSingleUnitDiscount(t *testing.T) {
 }
 
 func TestCanFindMultipleUnitDiscount(t *testing.T) {
-	finder := buildDiscountFinder([]models.FixedDiscount{
-		models.NewFixedDiscount("001", 3, 200),
-		models.NewFixedDiscount("002", 3, 120),
-		models.NewFixedDiscount("003", 0, 120),
+	finder := buildDiscountFinder([]models.ComboDiscount{
+		models.NewComboDiscount("001", 3, 200),
+		models.NewComboDiscount("002", 3, 120),
+		models.NewComboDiscount("003", 0, 120),
 	})
-	discounts, err := finder.findFixedDiscounts(
+	discounts, err := finder.findComboDiscounts(
 		[]models.WatchID{"002", "003"},
 	)
 	assert.Nil(t, err)
 	assert.True(t, len(discounts) == 2)
 }
 
-func buildDiscountFinder(fixedDiscounts []models.FixedDiscount) DiscountFinder {
+func buildDiscountFinder(comboDiscounts []models.ComboDiscount) DiscountFinder {
 	return NewDiscountFinder(
-		infrastructure.NewInMemoryFixedDiscountRepository(fixedDiscounts),
+		infrastructure.NewInMemoryComboDiscountRepository(comboDiscounts),
 	)
 }

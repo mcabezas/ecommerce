@@ -6,26 +6,26 @@ import (
 	"github.com/mcabezas/ecommerce/checkout/models"
 )
 
-type inMemoryFixedDiscountRepository struct {
-	fixedDiscounts *sync.Map
+type inMemoryComboDiscountRepository struct {
+	comboDiscounts *sync.Map
 }
 
-func NewInMemoryFixedDiscountRepository(discounts []models.FixedDiscount) FixedDiscountRepository {
-	fixedDiscounts := &sync.Map{}
+func NewInMemoryComboDiscountRepository(discounts []models.ComboDiscount) ComboDiscountRepository {
+	comboDiscounts := &sync.Map{}
 	for _, discount := range discounts {
-		fixedDiscounts.Store(discount.WatchID(), discount)
+		comboDiscounts.Store(discount.WatchID(), discount)
 	}
-	return &inMemoryFixedDiscountRepository{
-		fixedDiscounts: fixedDiscounts,
+	return &inMemoryComboDiscountRepository{
+		comboDiscounts: comboDiscounts,
 	}
 }
 
-func (m *inMemoryFixedDiscountRepository) GetDiscounts(watchIDs []models.WatchID) ([]models.Discount, error) {
+func (m *inMemoryComboDiscountRepository) GetDiscounts(watchIDs []models.WatchID) ([]models.Discount, error) {
 	var result []models.Discount
 	for _, watchID := range watchIDs {
-		if discount, ok := m.fixedDiscounts.Load(watchID); ok {
-			fixedDiscount := discount.(models.FixedDiscount)
-			result = append(result, &fixedDiscount)
+		if discount, ok := m.comboDiscounts.Load(watchID); ok {
+			comboDiscount := discount.(models.ComboDiscount)
+			result = append(result, &comboDiscount)
 		}
 	}
 	return result, nil

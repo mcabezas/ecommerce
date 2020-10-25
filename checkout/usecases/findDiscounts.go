@@ -6,17 +6,17 @@ import (
 )
 
 type DiscountFinder interface {
-	findFixedDiscounts(watchIDs []models.WatchID) ([]models.Discount, error)
+	findComboDiscounts(watchIDs []models.WatchID) ([]models.Discount, error)
 }
 
 type discountFinder struct {
-	repository infrastructure.FixedDiscountRepository
+	repository infrastructure.ComboDiscountRepository
 }
 
-func NewDiscountFinder(repository infrastructure.FixedDiscountRepository) DiscountFinder {
+func NewDiscountFinder(repository infrastructure.ComboDiscountRepository) DiscountFinder {
 	return &discountFinder{repository}
 }
 
-func (df *discountFinder) findFixedDiscounts(watchIDs []models.WatchID) ([]models.Discount, error) {
+func (df *discountFinder) findComboDiscounts(watchIDs []models.WatchID) ([]models.Discount, error) {
 	return df.repository.GetDiscounts(watchIDs)
 }
