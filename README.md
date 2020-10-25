@@ -36,7 +36,7 @@
 
 This project has been built using `clean architecture`.
 
-The database implementation is a mocked one. However, it can be easily replaced by another one once the database technology has been choose.
+The database implementation is an in memory database. However, it can be easily replaced by another one once the database technology has been chosen.
  
 ### Why clean architecture?
 
